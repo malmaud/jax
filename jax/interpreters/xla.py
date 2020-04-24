@@ -602,11 +602,8 @@ def _get_device(device, backend):
   out, = compiled.local_devices()
   return out
 
-xla_call_p = core.Primitive('xla_call')
-xla_call_p.call_primitive = True
-xla_call_p.multiple_results = True
-xla_call = partial(core.call_bind, xla_call_p)
-xla_call_p.def_custom_bind(xla_call)
+xla_call_p = core.CallPrimitive('xla_call')
+xla_call = xla_call_p.bind
 xla_call_p.def_impl(_xla_call_impl)
 
 def _xla_call_translation_rule(c, axis_env,
